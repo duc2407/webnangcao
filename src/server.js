@@ -8,7 +8,7 @@ import flash from 'connect-flash';
 import methodOverride from 'method-override';
 import passPort from "passport";
 import session from "./config/session";
-
+import initRoutesAPI from "./routes/api"
 
 let app = express();
 app.use(methodOverride('_method'));
@@ -28,6 +28,7 @@ app.use(passPort.initialize());
 app.use(passPort.session());
 
 initRoutes(app);
+// initRoutesAPI(app)
 
 let port = process.env.PORT;
-app.listen(port || 8080, () => console.log(`Doctors care app is running on port ${port}!`));
+app.listen(port || 8080, () => console.log(`Server đang chạy tại http://localhost:${port}`));

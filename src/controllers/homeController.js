@@ -39,6 +39,27 @@ let getHomePage = async (req, res) => {
         return res.render('main/homepage/pageNotFound.ejs');
     }
 };
+let getApiHomePage = async(req, res) => {
+    try {
+        let specializations = await homeService.getSpecializations();
+        let clinics = await homeService.getClinics();
+        let doctors = await userService.getInfoDoctors();
+        let posts = await homeService.getPosts(LIMIT_POST);
+        return res.status(200).json({
+            user: req.user,
+            specializations: specializations,
+            clinics: clinics,
+            doctors: doctors,
+            posts: posts,
+            pageId: process.env.PAGE_ID
+        })
+    } catch (e) {
+        return res.status(500).json({
+            err : 1,
+            errMess: e.message
+        })
+    }
+}
 
 let getUserPage = (req, res) => {
     let currentMonth = new Date().getMonth() +1 ;
@@ -282,6 +303,19 @@ let getFeedbackPage = async (req, res) => {
         return res.render('main/homepage/pageNotFound.ejs');
     }
 };
+let getApiFeedbackPage = async (req, res) => {
+    try {
+        let doctor = await doctorService.getDoctorForFeedbackPage(req.params.id);
+        return res.status(200).json({
+            doctor: doctor
+        });
+    } catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errMess: e.message
+        });
+    }
+};
 
 let postCreateFeedback = async (req, res) => {
     try {
@@ -314,6 +348,19 @@ let postSearchHomePage = async (req, res) => {
     }
 };
 
+let getApiPageAllClinics = async (req, res) => {
+    try{
+        let clinics = await homeService.getDataPageAllClinics();
+
+        return res.status(200).json({
+            clinics: clinics
+        })
+    }catch (e) {
+        return res.status(500).json({
+            errMess: e.message
+        })
+    }
+};
 let getPageAllClinics = async (req, res) => {
     try{
         let clinics = await homeService.getDataPageAllClinics();
@@ -325,7 +372,6 @@ let getPageAllClinics = async (req, res) => {
         console.log(e);
     }
 };
-
 let getPageAllDoctors = async (req, res)=>{
     try{
         let doctors = await homeService.getDataPageAllDoctors();
@@ -336,7 +382,18 @@ let getPageAllDoctors = async (req, res)=>{
         console.log(e);
     }
 };
-
+let getApiPageAllDoctors = async (req, res)=>{
+    try{
+        let doctors = await homeService.getDataPageAllDoctors();
+        return res.status(200).json({
+            doctors: doctors
+        })
+    }catch (e) {
+        return res.status(500).json({
+            errMess: e.message
+        })
+    }
+};
 let getPageAllSpecializations =async (req, res)=>{
     try{
         let specializations = await homeService.getDataPageAllSpecializations();
@@ -347,10 +404,27 @@ let getPageAllSpecializations =async (req, res)=>{
         console.log(e);
     }
 };
+let getApiPageAllSpecializations =async (req, res)=>{
+    try{
+        let specializations = await homeService.getDataPageAllSpecializations();
+        return res.status(200).json({
+            specializations: specializations
+        })
+    }catch (e) {
+        return res.status(500).json({
+            errMess: e.message
+        })
+    }
+};
 
 
 module.exports = {
+    getApiFeedbackPage: getApiFeedbackPage,
+    getApiPageAllSpecializations : getApiPageAllSpecializations,
+    getApiPageAllDoctors: getApiPageAllDoctors,
+    getApiPageAllClinics: getApiPageAllClinics,
     getHomePage: getHomePage,
+    getApiHomePage: getApiHomePage,
     getUserPage: getUserPage,
     getDetailSpecializationPage: getDetailSpecializationPage,
     getDetailDoctorPage: getDetailDoctorPage,

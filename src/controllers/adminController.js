@@ -4,12 +4,19 @@ import clinicService from "./../services/clinicService";
 import specializationService from "./../services/specializationService";
 import supporterService from "./../services/supporterService";
 import doctorService from "./../services/doctorService";
-import chatFBServie from "./../services/chatFBService";
+// import chatFBServie from "./../services/chatFBService";
 import multer from "multer";
 
 let getManageDoctor = async (req, res) => {
     let doctors = await userService.getInfoDoctors();
     return res.render("main/users/admins/manageDoctor.ejs", {
+        user: req.user,
+        doctors: doctors,
+    });
+};
+let getApiManageDoctor = async (req, res) => {
+    let doctors = await userService.getInfoDoctors();
+    return res.render(200).json({
         user: req.user,
         doctors: doctors,
     });
@@ -22,11 +29,27 @@ let getManageClinic = async (req, res) => {
         clinics: clinics
     });
 };
+let getApiManageClinic = async (req, res) => {
+    let clinics = await homeService.getClinics();
+    return res.render(200).json({
+        user: req.user,
+        clinics: clinics
+    });
+};
 
 let getCreateDoctor = async (req, res) => {
     let clinics = await homeService.getClinics();
     let specializations = await homeService.getSpecializations();
     return res.render("main/users/admins/createDoctor.ejs", {
+        user: req.user,
+        clinics: clinics,
+        specializations: specializations
+    });
+};
+let getApiCreateDoctor = async (req, res) => {
+    let clinics = await homeService.getClinics();
+    let specializations = await homeService.getSpecializations();
+    return res.status(200).json({
         user: req.user,
         clinics: clinics,
         specializations: specializations
@@ -56,6 +79,35 @@ let postCreateDoctor = async (req, res) => {
 let getCreateClinic = (req, res) => {
     return res.render("main/users/admins/createClinic.ejs", {
         user: req.user
+    });
+};
+let postApiCreateClinic = (req, res) => {
+    imageClinicUploadFile(req, res, async (err) => {
+        if (err) {
+            console.log(err);
+            if (err.message) {
+                console.log(err.message);
+                return res.status(500).send(err.message);
+            } else {
+                console.log(err);
+                return res.status(500).send(err);
+            }
+        }
+
+        try {
+            let item = req.body;
+            let imageClinic = req.file;
+            item.image = imageClinic.filename;
+            let clinic = await clinicService.createNewClinic(item);
+            return res.status(200).json({
+                message: 'success',
+                clinic: clinic
+            });
+
+        } catch (e) {
+            console.log(e);
+            return res.status(500).send(e);
+        }
     });
 };
 
@@ -208,6 +260,17 @@ let getEditDoctor = async (req, res) => {
     let clinics = await homeService.getClinics();
     let specializations = await homeService.getSpecializations();
     return res.render("main/users/admins/editDoctor.ejs", {
+        user: req.user,
+        doctor: doctor,
+        clinics: clinics,
+        specializations: specializations
+    })
+};
+let getApiEditDoctor = async (req, res) => {
+    let doctor = await doctorService.getDoctorForEditPage(req.params.id);
+    let clinics = await homeService.getClinics();
+    let specializations = await homeService.getSpecializations();
+    return res.render(200).json({
         user: req.user,
         doctor: doctor,
         clinics: clinics,
@@ -401,6 +464,12 @@ let getInfoStatistical = async (req, res) => {
 };
 
 module.exports = {
+    getApiManageDoctor: getApiManageDoctor,
+    getApiCreateDoctor: getApiCreateDoctor,
+    getApiManageClinic: getApiManageClinic,
+    getApiEditDoctor: getApiEditDoctor,
+    postApiCreateClinic: postApiCreateClinic,
+
     getManageDoctor: getManageDoctor,
     getCreateDoctor: getCreateDoctor,
     getEditClinic: getEditClinic,

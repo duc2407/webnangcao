@@ -6,7 +6,11 @@ let getLogin = (req, res) => {
         error: req.flash("error"),
     });
 };
-
+let getApiLogin = (req, res) => {
+    return res.status(200).json({
+        error: req.flash("error"),
+    });
+};
 let getRegister = (req, res) => {
     return res.render("auth/register.ejs");
 };
@@ -92,6 +96,7 @@ let checkLoggedOut = (req, res, next) => {
     next();
 };
 module.exports = {
+    getApiLogin: getApiLogin,
     getLogin: getLogin,
     getRegister: getRegister,
     postRegister: postRegister,

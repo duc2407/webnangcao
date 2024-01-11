@@ -5,7 +5,7 @@ import admin from "./../controllers/adminController";
 import doctor from "./../controllers/doctorController";
 import supporter from "./../controllers/supporterController";
 import clinic from "./../controllers/clinicController";
-import bot from "./../controllers/botFBController";
+// import bot from "./../controllers/botFBController";
 import passport from "passport";
 import passportLocal from 'passport-local';
 import userService from "./../services/userService";
@@ -60,21 +60,41 @@ passport.deserializeUser((id, done) => {
 });
 
 let initRoutes = (app) => {
+    //api
+    router.get("/api/all-clinics", home.getApiPageAllClinics);
+    router.get("/api/all-doctors", home.getApiPageAllDoctors);
+    router.get("/api/all-specializations", home.getApiPageAllSpecializations);
+    router.post("/api/search-homepage", home.postSearchHomePage);
+    router.get("/api/feedback/:id", home.getApiFeedbackPage)
+
+    router.get('/api/users/manage/doctor', auth.checkLoggedIn, admin.getApiManageDoctor);
+    router.get('/api/users/manage/doctor/create', auth.checkLoggedIn, admin.getApiCreateDoctor);
+    router.get('/api/users/manage/clinic', auth.checkLoggedIn, admin.getApiManageClinic);
+    router.post('/api/admin/doctor/create', auth.checkLoggedIn, admin.postCreateDoctor);
+    router.get('/api/users/doctor/edit/:id', auth.checkLoggedIn, admin.getApiEditDoctor);
+    router.put('/api/admin/doctor/update-without-file', auth.checkLoggedIn, admin.putUpdateDoctorWithoutFile);
+    router.put('/api/admin/doctor/update', auth.checkLoggedIn, admin.putUpdateDoctor);
+
+    router.post('/api/admin/clinic/create', auth.checkLoggedIn, admin.postApiCreateClinic);
+    router.post('/api/admin/clinic/create-without-file', auth.checkLoggedIn, admin.postCreateClinicWithoutFile);
+    
+    router.post("/api/get-info-doctor-by-id", doctor.getInfoDoctorById);
+    router.post("/api/get-info-clinic-by-id", clinic.getInfoClinicById);
+    router.post("/api/get-detail-patient-by-id", home.getDetailPatientBooking);
+
+    router.delete('/api/admin/delete/clinic', auth.checkLoggedIn, admin.deleteClinicById);
+    router.delete('/api/admin/delete/doctor', auth.checkLoggedIn, admin.deleteDoctorById);
+    router.delete('/api/admin/delete/specialization', auth.checkLoggedIn, admin.deleteSpecializationById);
+    router.delete('/api/admin/delete/post', auth.checkLoggedIn, admin.deletePostById);
+    
+    //render
     router.get("/all-clinics", home.getPageAllClinics);
     router.get("/all-doctors", home.getPageAllDoctors);
     router.get("/all-specializations", home.getPageAllSpecializations);
-
-    router.get('/webhook', bot.getWebhookFB);
-    router.post('/webhook', bot.postWebhookFB);
-
-    router.get("/set-up-bot-facebook", bot.getSetupBotFBPage);
-    router.post("/set-up-bot-facebook", bot.handleSetupBotFBPage);
-    router.get("/booking-online-messenger", bot.getBookingOnlineMessengerPage);
-    router.post("/set-info-booking-online-messenger", bot.setInfoBookingMessenger);
-
+    router.get("/feedback/:id", home.getFeedbackPage);
+    router.get('/users/manage/schedule-for-doctors', auth.checkLoggedIn, admin.getManageCreateScheduleForDoctorsPage);
     router.get('/feedback/:id', home.getFeedbackPage);
     router.post('/feedback/create', home.postCreateFeedback);
-
     router.get('/for-patients', home.getPageForPatients);
     router.get('/for-doctors', home.getPageForDoctors);
 
@@ -99,8 +119,7 @@ let initRoutes = (app) => {
     router.get('/users/manage/supporter', auth.checkLoggedIn, admin.getSupporterPage);
     router.get('/users', auth.checkLoggedIn, home.getUserPage);
 
-    router.get('/users/manage/bot', auth.checkLoggedIn, admin.getManageBotPage);
-    router.get('/users/manage/schedule-for-doctors', auth.checkLoggedIn, admin.getManageCreateScheduleForDoctorsPage);
+
 
     router.get('/users/manage/doctor', auth.checkLoggedIn, admin.getManageDoctor);
     router.get('/users/manage/doctor/create', auth.checkLoggedIn, admin.getCreateDoctor);
@@ -188,3 +207,17 @@ let initRoutes = (app) => {
     return app.use("/", router);
 };
 module.exports = initRoutes;
+
+
+
+
+
+
+//67
+// router.get('/webhook', bot.getWebhookFB);
+// router.post('/webhook', bot.postWebhookFB);
+// router.get("/set-up-bot-facebook", bot.getSetupBotFBPage);
+// router.post("/set-up-bot-facebook", bot.handleSetupBotFBPage);
+// router.get("/booking-online-messenger", bot.getBookingOnlineMessengerPage);
+// router.post("/set-info-booking-online-messenger", bot.setInfoBookingMessenger);
+// 98router.get('/users/manage/bot', auth.checkLoggedIn, admin.getManageBotPage);

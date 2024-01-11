@@ -29,8 +29,6 @@ let resetPassword = (email, linkVerify) => {
     });
 };
 
-
-
 let setNewPassword = (email, password) => {
     return new Promise(async (resolve, reject) => {
         await userService.findUserByEmail(email)

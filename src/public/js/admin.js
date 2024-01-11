@@ -1169,19 +1169,19 @@ function statisticalAdmin(month) {
     $.ajax({
         method: "POST",
         url: `${window.location.origin}/admin/statistical`,
-        data: { month: month },
+        data: { month: month - 1 },
         success: function(data) {
             $('#sumPatient').text(data.patients.count);
             $('#sumDoctor').text(data.doctors.count);
             $('#sumPost').text(data.posts.count);
 
             if (data.bestDoctor === '') {
-                $('#bestDoctor').text(`No information`);
+                $('#bestDoctor').text(`Không có thông tin`);
             } else {
                 $('#bestDoctor').text(`${data.bestDoctor.name} (${data.bestDoctor.count})`);
             }
             if (data.bestSupporter === '') {
-                $('#bestSupporter').text(`No information`);
+                $('#bestSupporter').text(`Không có thông tin`);
             } else {
                 $('#bestSupporter').text(`${data.bestSupporter.name} (${data.bestSupporter.count})`);
             }

@@ -25,8 +25,43 @@
     <link type="text/css" rel="stylesheet" href="/components/tableOfContent/jquery.tocify.css"/>
     <script src="/components/tableOfContent/jquery.tocify.min.js"></script>
 
-    <script type='text/javascript' src=<%= process.env.URL_BING_HTTPS %> async defer></script>
+    <!-- <script type='text/javascript' src=<%= process.env.URL_BING_HTTPS %> async defer></script> -->
 
+
+    <!--  -->
+    <style>
+        .doctor-avatar {
+        overflow: hidden; /* Ngăn hình ảnh tràn ra ngoài thẻ cha khi phóng to */
+        }
+
+        .doctor-avatar .img {
+        transition: transform .3s;
+         /* Tạo hiệu ứng chuyển đổi mượt mà */
+        }
+
+        .doctor-avatar:hover .img {
+        border-radius: 0 !important;
+        /* margin-top: 100px; */
+        object-fit: cover;
+        transform: scale(1.8); /* Phóng to hình ảnh 1.5 lần khi di chuột vào */
+        top:25px;
+        position: relative;
+        }
+
+        .doctor-avatar:hover .hide{
+            opacity: 0;
+           
+            /* display: none; */
+        }
+
+        .changeColor{
+            transition: background-color .8s !important;
+        }
+        .changeColor:hover {
+            background-color: rgb(63, 172, 255) !important;
+        }
+    </style>
+    <!--  -->
 </head>
 <body>
 
@@ -47,7 +82,7 @@
 
 
 <!-- Load Facebook SDK for JavaScript -->
-<div id="fb-root"></div>
+<!-- <div id="fb-root"></div>
 <script>
     window.fbAsyncInit == function () {
         FB.init({
@@ -65,16 +100,16 @@
         fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
 
-</script>
+</script> -->
 
-<!-- Your customer chat code -->
+<!-- Your customer chat code
 <div class="fb-customerchat"
      attribution=setup_tool
      page_id=<%= process.env.PAGE_ID %>
      theme_color="#0084ff"
      logged_in_greeting="Welcome to DoctorsCare."
      logged_out_greeting="Welcome to DoctorsCare.">
-</div>
+</div> -->
 
 </body>
 </html>
